@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock title %}
+
+{% block content %}
+<h1 class="text-center text-2xl text-green-600">Welcome {{ new_user.first_name }}!</h1>
+<br>
+<div class="bg-slate-800 rounded-2xl p-5 m-2">
+  <p>
+    Your account has been successfully created.
+    Now you can <a href="{% url "login" %}" class="text-orange-600 hover:text-orange-400">log in</a>
+  </p>
+</div>
+{% endblock content %}

@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  my_center {
+    @apply text-center text-5xl text-yellow-500;
+  }
+}
+

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load tailwind_filters %}
+
+{% block title %}Log-in{% endblock title %}
+
+{% block content %}
+  <h1 class="text-center text-2xl text-green-600">Log-in</h1>
+  <br>
+  <div class="bg-slate-800 rounded-2xl p-5 m-2">
+  <p class="">Please, use the following form to log-in:</p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="Log in" class="text-center bg-green-600 hover:bg-green-400 px-3 py-2 rounded-lg">
+  </form>
+  </div>
+{% endblock content %}
+

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock title %}
+
+{% block content %}
+  <h1 class="text-5xl text-center text-green-600">Dashboard</h1>
+  <p class="text-xl text-center text-yellow-400 my-5">
+    Welcome to your dashboard.
+    You can <a href="{% url "edit" %}" class="text-orange-500 hover:text-orange-400 hover:underline">edit your profile</a>
+    or <a href="{% url "password_change" %}" class="text-orange-500 hover:text-orange-400 hover:underline">change your password</a>.
+  </p>
+{% endblock content %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load tailwind_filters %}
+
+{% block title %}Bookmark an image{% endblock title %}
+
+{% block content %}
+<h1 class="text-center text-2xl text-green-600 ">Bookmark an image</h1>
+<br>
+<div class="bg-slate-800 rounded-2xl p-5 m-2 text-xl ">
+  <div class="flex flex-wrap ">
+  <img src="{{ request.GET.url }}" class="w-1/2 rounded-lg m-2">
+  <form method="post">
+    {% csrf_token %}
+    <div class="text-teal-900">
+      {{ form|crispy }}
+    </div>
+    <input type="submit" value="Bookmark it!" class="text-center bg-green-600 hover:bg-green-400 px-3 py-2 rounded-lg">
+  </form>
+</div>
+</div>
+{% endblock content %}

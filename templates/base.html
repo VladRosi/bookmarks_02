@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load static tailwind_tags %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% tailwind_css %}
+  <title>
+    {% block title %}{% endblock title %}
+  </title>
+</head>
+<body class="bg-slate-900 text-white">
+  <div class="text-center mb-3 bg-slate-800 flex flex-wrap ">
+    <span class="text-3xl leading-10  text-green-600 mx-3  p-3">Bookmarks</span>
+  {% if request.user.is_authenticated %}
+    <ul class="text-2xl leading-10  text-green-600 mx-3 ">
+      <li 
+      class="{% if section == 'dashboard' %}bg-emerald-900 text-white{% endif %} hover:bg-gray-700 p-3"
+      >
+        <a href="{% url "dashboard" %}" class="">My dashboard</a>
+      </li>
+      {% comment %} <li class="{% if section == 'images' %}bg-red-600{% endif %}">
+        <a href="{% url "images" %}">Images</a>
+      </li>
+      <li class="{% if section == 'people' %}bg-red-600{% endif %}">
+        <a href="{% url "people" %}">People</a>
+      </li> {% endcomment %}
+    </ul>
+  {% endif %}
+  {% if request.user.is_authenticated %}
+    <div class="text-2xl leading-10 text-green-600 mx-3 ms-auto p-3">
+      Hello {{ request.user.first_name|default:request.user.username }},
+    </div>
+      <a href="{% url "logout" %}" class="text-2xl leading-10 text-green-600 ms-3 p-3 bg-gray-900 hover:bg-gray-700">Logout</a>
+    {% else %}
+      <a href="{% url "login" %}"
+      class=" text-2xl leading-10 text-green-600 ms-auto p-3 bg-gray-900 hover:bg-gray-700"
+      >Log-in</a>
+    {% endif %}
+  </div>
+  {% if messages %}
+    <div>
+      {% for message in messages %}
+      <div class="
+      {% if 'success' in message.tags %}
+      bg-green-100 border-t border-b border-green-500 text-green-700 px-4 py-3
+      {% elif 'error' in message.tags %}
+      bg-red-100 border-t border-b border-red-500 text-red-700 px-4 py-3
+      {% else %}
+      bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3
+      {% endif %}
+      
+      " role="alert">
+        {% comment %} <p class="font-bold">Informational message</p> {% endcomment %}
+        <p class="text-sm">{{ message|safe }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div class="mx-auto w-9/12">
+    {% block content %}{% endblock content %}
+  </div>
+</body>
+</html>

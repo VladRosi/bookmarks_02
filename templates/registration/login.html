@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load tailwind_filters %}
+{% block title %}Log-in{% endblock title %}
+
+{% block content %}
+  <h1 class="text-center text-2xl text-green-600">Log-in</h1>
+  <br>
+  <div class="bg-slate-800 rounded-2xl p-5 m-2 text-xl">
+  {% if form.error %}
+    <p>
+      Your username and password didn't match.
+      Please try again.
+    </p>
+  {% else %}
+    <p>
+      Please, use the following form to log-in.
+      If you don't have an account
+      <a href="{% url "register" %}" class="text-orange-500 hover:text-orange-400">register here</a>
+    </p>
+  {% endif %}
+    <form action="{% url "login" %}" method="post">
+      <div class="text-teal-900">
+        {{ form|crispy }}
+      </div>
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
+      <input type="submit" value="Log in" class="text-center bg-green-600 hover:bg-green-400 px-3 py-2 rounded-lg">
+    </form>
+    <br>
+    <p>
+      <a href="{% url "password_reset" %}" class="hover:underline text-orange-500 hover:text-orange-400">
+        Forgoten your password?
+      </a>
+    </p>
+    <ul class="flex flex-wrap">
+      <li class="text-blue-500 m-2 p-2 bg-teal-300 rounded-lg hover:bg-teal-500">
+        <a href="">
+          Sign in with Facebook
+        </a>
+      </li>
+      <li class="text-blue-600 m-2 p-2 bg-teal-300 rounded-lg hover:bg-teal-500">
+        <a href="{% url "social:begin" "twitter" %}">
+          Sign in with Twitter
+        </a>
+      </li>
+      <li class="text-green-600 m-2 p-2 bg-teal-300 rounded-lg hover:bg-teal-500">
+        <a href="{% url "social:begin" "google-oauth2" %}">
+          Sign in with Google
+        </a>
+      </li>
+    </ul>
+  </div>
+{% endblock content %}
