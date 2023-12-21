@@ -43,6 +43,7 @@ INSTALLED_APPS = [
   "crispy_tailwind",
   "social_django",
   "django_extensions",
+  "easy_thumbnails",
   "images.apps.ImagesConfig",
 ]
 
@@ -177,6 +178,15 @@ SOCIAL_AUTH_PIPELINE = [
   'social_core.pipeline.social_auth.load_extra_data',
   'social_core.pipeline.user.user_details',
 ]
+
+if DEBUG:
+  import mimetypes
+  mimetypes.add_type('application/javascript', '.js', True)
+  mimetypes.add_type('text/css', '.css', True)
+
+if DEBUG:
+  THUMBNAIL_DEBUG = True
+
 
 # PASSWORD_HASHERS = [
 #  'django.contrib.auth.hashers.PBKDF2PasswordHasher',

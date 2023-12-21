@@ -1,0 +1,18 @@
+{% load thumbnail %}
+
+
+{% for image in images %}
+  <div class="w-[300px] h-[400px] bg-blue-500 m-2 text-center hover:shadow-lg hover:shadow-red-500">
+    <a href="{{ image.get_absolute_url }}" >
+      {% thumbnail image.image 300x300 crop="smart" as im %}
+      <a href="{{ image.get_absolute_url }}">
+        <img src="{{ im.url }}" class="mx-auto">
+      </a>
+    </a>
+    <div>
+      <a href="{{ image.get_absolute_url }}" class="px-1 ">
+        {{ image.title }}
+      </a>
+    </div>
+  </div>
+{% endfor %}

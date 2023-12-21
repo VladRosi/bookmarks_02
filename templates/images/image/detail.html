@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block title %}{{ image.title }}{% endblock title %}
+
+{% block content %}
+  <h1 class="text-4xl text-green-500 text-center my-3">{{ image.title }}</h1>
+
+  <div class="bg-slate-800 rounded-lg p-3 m-2 flex flex-wrap">
+
+  <div class="basis-1/3 flex flex-wrap">
+    <a href="{{ image.image.url }}" class="mx-auto rounded-lg">
+        <img src="{% thumbnail image.image 200x0 quality=100 %}" >
+    </a>
+    {% comment %} <img src="{{ image.url }}" alt="{{ image.title }}" class="h-[40vh] relative mx-auto rounded-lg"> {% endcomment %}
+  </div>
+
+  <div class="mx-auto basis-2/3">
+    <div class="flex flex-wrap flex-col">
+          {% with total_likes=image.users_like.count users_like=image.users_like.all %}
+            <span class="text-amber-500 bg-slate-600 px-3 py-2 m-2 mx-auto rounded-full">
+              <div id="likes-count">{{ total_likes }} like{{ total_likes|pluralize }}</div>
+            </span>
+            <a href="#" id="like" data-id="{{ image.id }}" data-action="{% if request.user in users_like %}un{% endif %}like" class="p-2 bg-red-500 mx-auto rounded-lg hover:bg-red-400">
+              {% if request.user not in users_like %}
+                Like
+              {% else %}
+                Unlike
+              {% endif %}
+            </a>
+          {% endwith %}
+        {{ image.description|linebreaks }}
+    </div>
+    <br>
+    <div>
+      {% for user in image.users_like.all %}
+        <div class="bg-emerald-800 {% if forloop.counter0|divisibleby:"2" %}bg-blue-800{% endif %} p-2 m-2 flex flex-wrap w-full">
+          {% if user.profile.photo %}
+            <img src="{{ user.profile.photo.url }}" class="h-[5vh] rounded-full ">
+          {% endif %}
+          <p class="mx-auto place-self-center">{{ user.first_name }}</p>
+        </div>
+      {% empty %}
+        <p class="text-xl text-amber-500">Nobody likes this image yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  </div>
+{% endblock content %}
+
+{% block domready %}
+  const url = '{% url "images:like" %}'
+  const options = {
+    method: 'POST',
+    headers: {'X-CSRFToken': csrftoken},
+    mode: 'same-origin'
+  }
+  
+  document.querySelector('#like').addEventListener('click', function(e) {
+    e.preventDefault()
+    const likeButton = this
+
+    const formData = new FormData()
+    formData.append('id', likeButton.dataset.id)
+    formData.append('action', likeButton.dataset.action)
+    options['body'] = formData
+
+    fetch(url, options)
+      .then(response => response.json())
+      .then(data => {
+        if (data['status'] === 'ok') {
+          const previousAction = likeButton.dataset.action
+
+          const action = previousAction === 'like' ? 'unlike' : 'like'
+          likeButton.dataset.action = action
+          likeButton.innerHTML = action
+
+          const likeCount = document.querySelector('div#likes-count')
+          const totalLikes = parseInt(likeCount.innerHTML)
+          likeCount.innerHTML = previousAction === 'like' ? totalLikes + 1 : totalLikes - 1
+        }
+      })
+
+  })
+{% endblock domready %}
