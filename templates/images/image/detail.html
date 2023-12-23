@@ -21,6 +21,9 @@
             <span class="text-amber-500 bg-slate-600 px-3 py-2 m-2 mx-auto rounded-full">
               <div id="likes-count">{{ total_likes }} like{{ total_likes|pluralize }}</div>
             </span>
+            <span class="text-amber-500 bg-slate-600 px-3 py-2 m-2 mx-auto rounded-full">
+              <div>{{ total_views }} view{{ total_views|pluralize }}</div>
+            </span>
             <a href="#" id="like" data-id="{{ image.id }}" data-action="{% if request.user in users_like %}un{% endif %}like" class="p-2 bg-red-500 mx-auto rounded-lg hover:bg-red-400">
               {% if request.user not in users_like %}
                 Like

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block title %}{{ user.get_full_name|default:user.username }}{% endblock title %}
+
+{% block content %}
+  <h1 class="text-5xl text-center text-green-600">{{ user.get_full_name|default:user.username }}</h1>
+  <div class="bg-slate-800 rounded-2xl p-5 m-2 flex flex-wrap">
+    <div class="whitespace-nowrap ">
+        <img src="{% thumbnail user.profile.photo|default:'assets/images/anon.png' 180x180 %}" class="rounded-full w-[180px] h-[180px] object-contain shadow-orange-500 shadow-sm">
+    </div>
+
+    <div class="">
+    {% with total_followers=user.followers.count %}
+      <div class="flex flex-wrap justify-between ">
+        <div class="text-amber-500 bg-slate-600 px-3 py-2 m-2  rounded-full">
+          <span id="follower-count">{{ total_followers }}</span> follower{{total_followers|pluralize}}
+        </div>
+        <a id="follow" href="#" data-id="{{ user.id }}" data-action="{% if request.user in user.followers.all %}un{% endif %}follow" class="px-3 py-2 bg-blue-500 rounded-lg hover:bg-blue-400 place-self-center">
+          {% if request.user not in user.followers.all %}
+          Follow
+          {% else %}
+          Unfollow
+          {% endif %}
+        </a>
+      </div>
+
+      <div id="image-list" class="flex flex-wrap">
+        {% include "images/image/list_images.html" with images=user.images_created.all %}
+      </div>
+    {% endwith %}
+    </div>
+
+  </div>
+{% endblock content %}
+
+{% block domready %}
+  const url = '{% url "user_follow" %}'
+  const options = {
+    method: 'POST',
+    headers: {'X-CSRFToken': csrftoken },
+    mode: 'same-origin',
+  }
+
+  document.querySelector('#follow')
+    .addEventListener('click', function(e) {
+      e.preventDefault()
+      const followButton = this
+    
+      const formData = new FormData()
+      formData.append('id', followButton.dataset.id)
+      formData.append('action', followButton.dataset.action)
+      options['body'] = formData
+
+      fetch(url, options)
+        .then(response => response.json())
+        .then(data => {
+          if(data['status'] === 'ok') {
+            const previousAction = followButton.dataset.action
+
+            let action = previousAction === 'follow' ? 'unfollow' : 'follow'
+            followButton.dataset.action = action
+            followButton.innerHTML = action
+
+            const followerCount = document.querySelector('#follower-count')
+            const totalFollowers = parseInt(followerCount.innerHTML)
+            followerCount.innerHTML = previousAction === 'follow' ? (totalFollowers + 1) : (totalFollowers - 1)
+          }
+    })
+  })
+{% endblock domready %}

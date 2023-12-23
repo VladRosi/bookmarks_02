@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load  thumbnail %}
+
+{% block title %}People{% endblock title %}
+
+{% block content %}
+  <h1 class="text-5xl text-center text-green-600">People</h1>
+  <div class="bg-slate-800 rounded-2xl p-5 m-2 flex flex-wrap">
+    {% for user in users %}
+      <a href="{{ user.get_absolute_url }}" class="flex flex-wrap bg-teal-800 m-2 hover:bg-teal-600 p-2 ">
+        <img src="{% thumbnail user.profile.photo|default:'assets/images/anon.png' 48x48 quality="100" %}" class="w-[48px] h-[48px] rounded-full object-contain shadow-sm shadow-yellow-600">
+        <span class="place-self-center mx-5">
+          {{ user.get_full_name|default:user.username }}
+        </span>
+      </a>
+    {% endfor %}
+  </div>
+
+{% endblock content %}

@@ -20,11 +20,9 @@
       <li class="{% if section == 'images' %}bg-emerald-900 text-white{% endif %} hover:bg-gray-700 p-3" >
         <a href="{% url "images:list" %}">Images</a>
       </li> 
-
-      {% comment %}
-      <li class="{% if section == 'people' %}bg-red-600{% endif %}">
-        <a href="{% url "people" %}">People</a>
-      </li> {% endcomment %}
+      <li class="{% if section == 'people' %}bg-emerald-900 text-white{% endif %} hover:bg-gray-700 p-3" >
+        <a href="{% url "user_list" %}">People</a>
+      </li> 
     </ul>
   {% endif %}
   {% if request.user.is_authenticated %}

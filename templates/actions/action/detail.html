@@ -1,0 +1,38 @@
+{% load thumbnail %}
+
+{% with user=action.user profile=action.user.profile %}
+  <div class="action flex flex-wrap p-2 m-2 bg-blue-800 hover:bg-blue-600">
+    
+    <div class="images nowrap flex flex-wrap">   
+        {% thumbnail user.profile.photo|default:'assets/images/anon.png' "80x80" crop="100%" as im %}
+        <a class="text-amber-500 hover:text-amber-400 hover:underline" href="{{ user.get_absolute_url }}">
+          <img src="{{ im.url }}" alt="{{ user.get_full_name }}" class="item-img rounded-full w-[80px] h-[80px] object-contain">
+        </a>
+      {% if action.target %}
+      <span class="place-self-center">&nbsp;&nbsp;&nbsp;==&gt;&nbsp;&nbsp;&nbsp;</span>
+        {% with target=action.target %}          
+            {% thumbnail target.profile.photo|default:'assets/images/anon.png' "80x80" crop="100%" as im %}
+            <a class="text-amber-500 hover:text-amber-400 hover:underline" href="{{ target.get_absolute_url }}">
+              <img src="{{ im.url }}" class="item-img rounded-full w-[80px] h-[80px] object-contain">
+            </a>
+        {% endwith %}
+      {% endif %}
+    </div>
+
+    <div class="info ms-5">
+      <p>
+        <span class="date text-slate-500 italic">{{ action.created|timesince }} ago</span>
+        <br>
+        <a class="text-amber-500 hover:text-amber-400 hover:underline" href="{{ user.get_absolute_url }}">
+          {{ user.first_name|default:user.username }}
+        </a>
+        {{ action.verb }}
+        {% if action.target %}
+          {% with target=action.target %}
+            <a class="text-amber-500 hover:text-amber-400 hover:underline" href="{{ target.get_absolute_url }}">{{ target }}</a>
+          {% endwith %}
+        {% endif %}
+      </p>
+    </div>
+  </div>
+{% endwith %}
